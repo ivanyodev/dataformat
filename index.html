@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Básico -->
+  <title>Data Format - Visor y Conversor Online de Excel, CSV y JSON | Ivanyodev</title>
+  <meta name="description" content="Abre, edita y convierte archivos Excel (.xlsx, .xls), CSV, JSON, TXT y SQL directamente en tu navegador de forma gratuita, rápida y segura con Data Format.">
+  <meta name="keywords" content="visor excel online, convertir excel a json, visor csv gratis, editar tablas online, data format ivanyodev, exportar excel a csv">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ivanyodev.com/">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ivanyodev.com/">
+  <meta property="og:title" content="Data Format - Visor y Conversor Online de Hojas de Datos">
+  <meta property="og:description" content="Procesa y convierte tus archivos Excel, CSV y JSON en segundos sin instalar programas. Modo oscuro y 100% privado.">
+  <meta property="og:image" content="https://ivanyodev.com/og-image.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://ivanyodev.com/">
+  <meta name="twitter:title" content="Data Format - Visor y Conversor de Excel y CSV en línea">
+  <meta name="twitter:description" content="Visualiza y convierte datos (.xlsx, .csv, .json, .sql) de forma rápida y gratuita desde el navegador.">
+  <meta name="twitter:image" content="https://ivanyodev.com/og-image.jpg">
+
+  <!-- Performance: Preconnect para Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="assets/styles.css">
+  
+  <!-- Carga diferida de scripts externos -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js" defer></script>
+
+  <!-- Datos Estructurados (Schema.org / JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Data Format - Ivanyodev",
+    "url": "https://ivanyodev.com/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "description": "Visor y conversor web de hojas de datos como Excel, CSV, JSON, TXT y SQL.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="globalLoader" class="loader" role="status" aria-live="polite">
+    <div class="loader__spinner"></div>
+    <div class="loader__text" id="loaderStatusText">Procesando archivo...</div>
+    <div class="loader__progress">
+      <div class="loader__progress-bar" id="progressBar"></div>
+    </div>
+    <div class="loader__percentage" id="loaderPercentage">0%</div>
+  </div>
+
+  <!-- App Header con Encabezado H1 Semántico -->
+  <header class="app-header">
+    <h2>Data Format</h2>
+    <span class="app-header__subtitle">- Powered by Ivanyodev</span>
+    <span class="app-header__badge">Modo Oscuro</span>
+  </header>
+
+  <main class="workspace">
+    <!-- File Explorer -->
+    <aside class="file-explorer" id="fileExplorer" aria-label="Explorador de archivos">
+      <div class="file-explorer__header">
+        <span class="material-icons" style="font-size:18px;">folder</span>
+        <span>Explorador</span>
+      </div>
+      <div class="file-explorer__tree" id="explorerTree">
+        <div class="tree__node tree__node--root" id="treeRoot">
+          <button type="button" class="tree__toggle" id="treeRootToggle" title="Expandir/Colapsar">
+            <span class="material-icons tree__chevron">expand_more</span>
+          </button>
+          <span class="material-icons tree__icon tree__icon--root">folder_open</span>
+          <span class="tree__label">Archivos importados</span>
+        </div>
+        <div class="tree__children" id="treeChildren">
+          <div class="tree__empty" id="treeEmpty">Sin archivos</div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="workspace__main">
+      <!-- Ribbon -->
+      <nav class="ribbon" id="ribbon" aria-label="Herramientas de edición">
+        <div class="ribbon__tabs">
+          <button type="button" class="ribbon__tab ribbon__tab--active" data-tab="archivo">Archivo</button>
+          <button type="button" class="ribbon__tab" data-tab="inicio">Inicio</button>
+          <button type="button" class="ribbon__tab" data-tab="datos">Datos</button>
+        </div>
+
+        <div id="tab-archivo" class="ribbon__panel ribbon__panel--active" data-panel="archivo">
+          <div class="ribbon__group">
+            <div class="ribbon__file-input">
+              <button type="button" class="ribbon__btn">
+                <span class="material-icons">folder_open</span>
+                Abrir Archivo
+              </button>
+              <input type="file" id="excelFile" accept=".xlsx, .xls, .json, .csv, .txt, .sql" aria-label="Cargar archivo de datos">
+            </div>
+            <button type="button" class="ribbon__btn" data-action="new-sheet" title="Crear una hoja nueva vacía">
+              <span class="material-icons">note_add</span>
+              Nueva hoja
+            </button>
+          </div>
+          <div class="ribbon__group">
+            <button type="button" class="ribbon__btn" data-action="export-excel">
+              <span class="material-icons">grid_on</span>
+              Exportar a Excel
+            </button>
+            <button type="button" class="ribbon__btn" data-action="export-json">
+              <span class="material-icons">data_object</span>
+              Exportar a JSON
+            </button>
+          </div>
+          <div class="ribbon__group">
+            <button type="button" class="ribbon__btn" data-action="export-csv">
+              <span class="material-icons">table_view</span>
+              Exportar a CSV
+            </button>
+            <button type="button" class="ribbon__btn" data-action="export-txt">
+              <span class="material-icons">description</span>
+              Exportar a TXT
+            </button>
+            <button type="button" class="ribbon__btn" data-action="export-html">
+              <span class="material-icons">language</span>
+              Exportar a HTML
+            </button>
+            <button type="button" class="ribbon__btn" data-action="export-xml">
+              <span class="material-icons">code</span>
+              Exportar a XML
+            </button>
+          </div>
+        </div>
+
+        <div id="tab-inicio" class="ribbon__panel" data-panel="inicio">
+          <div class="ribbon__group">
+            <div class="color-picker">
+              <span class="color-picker__label">Color de Relleno:</span>
+              <div class="color-picker__palette">
+                <button type="button" class="color-picker__swatch" style="background:#1a1220;" title="Restablecer" data-color="#1a1220"></button>
+                <button type="button" class="color-picker__swatch" style="background:#7f1d1d;" title="Rojo oscuro" data-color="#7f1d1d"></button>
+                <button type="button" class="color-picker__swatch" style="background:#4c1d95;" title="Violeta oscuro" data-color="#4c1d95"></button>
+                <button type="button" class="color-picker__swatch" style="background:#78350f;" title="Ámbar oscuro" data-color="#78350f"></button>
+                <button type="button" class="color-picker__swatch" style="background:#1e3a8a;" title="Azul oscuro" data-color="#1e3a8a"></button>
+                <button type="button" class="color-picker__swatch" style="background:#581c87;" title="Púrpura oscuro" data-color="#581c87"></button>
+                <button type="button" class="color-picker__swatch" style="background:#f43f5e;" title="Rosa brillante" data-color="#f43f5e"></button>
+                <button type="button" class="color-picker__swatch" style="background:#a855f7;" title="Morado" data-color="#a855f7"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-datos" class="ribbon__panel" data-panel="datos">
+          <div class="ribbon__group">
+            <span class="ribbon__hint">
+              Haz clic derecho en los encabezados de fila o columna para insertar o eliminar registros.
+            </span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Formula + Filter bars -->
+      <div class="top-bars">
+        <div class="formula-bar">
+          <div class="formula-bar__address" id="activeCellAddress">A1</div>
+          <span class="material-icons formula-bar__icon">functions</span>
+          <input type="text" class="formula-bar__input" id="formulaInput" readonly
+                 placeholder="Selecciona una celda para inspeccionar su contenido..." aria-label="Barra de fórmulas">
+        </div>
+        <div class="filter-bar">
+          <span class="material-icons filter-bar__icon">search</span>
+          <input type="text" class="filter-bar__input" id="globalFilterInput"
+                 placeholder="Filtrar tabla en tiempo real..." aria-label="Filtrar datos">
+          <button type="button" class="filter-bar__clear" id="globalFilterClear" title="Limpiar filtro">
+            <span class="material-icons" style="font-size:18px;">close</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Spreadsheet / Dropzone -->
+      <section class="spreadsheet" id="tableContainer">
+        <div class="dropzone" id="dropzoneContainer">
+          <div class="dropzone__card" id="dropzone">
+            <div class="dropzone__icon">
+              <span class="material-icons" style="font-size:3.2rem;">cloud_upload</span>
+            </div>
+            <h2 class="dropzone__title">Arrastra tu archivo aquí para comenzar</h2>
+            <p class="dropzone__desc">o haz clic para explorar en tu computadora</p>
+            <div class="dropzone__formats">
+              <span class="dropzone__tag">.XLSX</span>
+              <span class="dropzone__tag">.XLS</span>
+              <span class="dropzone__tag">.JSON</span>
+              <span class="dropzone__tag">.CSV</span>
+              <span class="dropzone__tag">.TXT</span>
+              <span class="dropzone__tag">.SQL</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statusbar -->
+      <footer class="statusbar">
+        <div id="tabsContainer" class="statusbar__tabs"></div>
+        <div class="statusbar__stats">
+          <div>PROMEDIO: <span class="statusbar__stats-value" id="avgValue">0</span></div>
+          <div>RECUENTO: <span class="statusbar__stats-value" id="countValue">0</span></div>
+          <div>SUMA: <span class="statusbar__stats-value" id="sumValue">0</span></div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Context Menu -->
+  <div id="contextMenu" class="context-menu">
+    <div class="context-menu__item" data-action="copy">
+      <span class="material-icons">content_copy</span> Copiar Celdas
+    </div>
+    <div class="context-menu__divider"></div>
+    <div class="context-menu__item context-menu__item--hidden" id="ctxSetHeader" data-action="setHeader">
+      <span class="material-icons">push_pin</span> Establecer como encabezado
+    </div>
+    <div class="context-menu__item" id="ctxInsert" data-action="insert">
+      <span class="material-icons">add</span> Insertar
+    </div>
+    <div class="context-menu__item" id="ctxDelete" data-action="delete">
+      <span class="material-icons">delete</span> Eliminar
+    </div>
+  </div>
+
+  <!-- Column Filter Menu -->
+  <div id="filterMenu" class="filter-menu">
+    <div class="filter-menu__list" id="filterList"></div>
+    <div class="filter-menu__actions">
+      <button type="button" id="filterCancel">Cancelar</button>
+      <button type="button" id="filterApply" class="btn--primary">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- JSON Export Modal -->
+  <div id="jsonModal" class="modal">
+    <div class="modal__card">
+      <div class="modal__header">
+        <span class="modal__header-title">
+          <span class="material-icons" style="font-size:20px;">settings</span>
+          Configurar Exportación JSON
+        </span>
+        <span class="modal__close" id="jsonModalClose">
+          <span class="material-icons">close</span>
+        </span>
+      </div>
+      <div class="modal__body">
+        <p class="modal__hint">Selecciona las columnas que incluirá la salida en JSON:</p>
+        <label class="filter-menu__item modal__select-all">
+          <input type="checkbox" id="jsonSelectAll" checked>
+          <b>(Seleccionar todo)</b>
+        </label>
+        <div id="jsonColumnList"></div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" class="btn" id="jsonModalCancel">Cancelar</button>
+        <button type="button" class="btn btn--primary" id="jsonModalDownload">Descargar JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Notificación</div>
+
+  <script src="assets/script.js" defer></script>
+</body>
+</html>
